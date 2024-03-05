@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BestRestaurants.Models;
+using HairSalon.Models;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -33,6 +33,14 @@ namespace HairSalon.Controllers
       _db.Stylists.Add(stylist);
       _db.SaveChanges();
       return RedirectToAction("Index");
+    }
+
+    public ActionResult Details(int id)
+    {
+      Stylist thisStylist = _db.Stylists
+        .Include(s => s.Clients)
+        .FirstOrDefault(s => s.StylistId == id);
+      return View(thisStylist);
     }
   }
 }
