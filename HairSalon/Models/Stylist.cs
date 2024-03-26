@@ -8,6 +8,6 @@ namespace HairSalon.Models
     public string StylistFirstName { get; set; }
     public string StylistLastName { get; set; }
     public string Details { get; set; }
-    public List<Client> Clients { get; set; }
+    public List<ClientStylist> JoinEntities { get; }
   }
 }
