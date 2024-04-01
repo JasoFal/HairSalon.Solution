@@ -91,9 +91,9 @@ namespace HairSalon.Controllers
     public ActionResult AddStylist(Client client, int stylistId)
     {
       #nullable enable
-      ClientStylist? JoinEntity = _db.ClientStylists.FirstOrDefault(j => (j.StylistId == stylistId && j.ClientId == client.ClientId));
+      ClientStylist? joinEntity = _db.ClientStylists.FirstOrDefault(j => (j.StylistId == stylistId && j.ClientId == client.ClientId));
       #nullable disable
-      if (joinEntity == null && clientId != 0)
+      if (joinEntity == null && stylistId != 0)
       {
         _db.ClientStylists.Add(new ClientStylist() { StylistId = stylistId, ClientId = client.ClientId });
         _db.SaveChanges();

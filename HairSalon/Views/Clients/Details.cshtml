@@ -2,14 +2,33 @@
   Layout = "_Layout";
 }
 
+@using HairSalon.Models
 @model HairSalon.Models.Client
 
 <h2>Client Details</h2>
 <hr/>
 <h3>Name: @Html.DisplayFor(model => model.ClientFirstName) @Html.DisplayFor(model => model.ClientLastName)</h3>
-<h3>@Html.DisplayNameFor(model => model.Stylist): @Html.DisplayFor(model => model.Stylist.StylistFirstName) @Html.DisplayFor(model => model.Stylist.StylistLastName)</h3>
+
+@if(@Model.JoinEntities.Count == 0)
+{
+  <p>This client does not have any stylists yet!</p>
+}
+else
+{
+  <h4>This client has the following stylists:</h4>
+  <ul>
+    @foreach(ClientStylist join in Model.JoinEntities)
+    {
+      <li>Name: @join.Stylist.StylistFirstName @join.Stylist.StylistLastName</li>
+      @using (Html.BeginForm("DeleteJoin", "Clients"))
+      {
+        @Html.Hidden("joinId", @join.ClientStylistId)
+        <input type="submit" value="Delete"/>
+      }
+    }
+  </ul>
+}
 
 <p>@Html.ActionLink("Edit Client", "Edit", new { id = Model.ClientId })</p>
 <p>@Html.ActionLink("Delete Client", "Delete", new { id = Model.ClientId })</p>
-<p>@Html.ActionLink($"Back to {Model.Stylist.StylistFirstName} {Model.Stylist.StylistLastName} details", "Details", "Stylists", new { id = Model.StylistId })</p>
-<p>@Html.ActionLink("Back to stylist list", "Index", "Stylists")</p>
+<p>@Html.ActionLink("Back to  list", "Index")</p>
