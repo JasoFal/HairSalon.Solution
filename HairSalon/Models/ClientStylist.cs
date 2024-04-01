@@ -1,4 +1,4 @@
-namespace ToDoList.Models
+namespace HairSalon.Models
 {
   public class ClientStylist
   {

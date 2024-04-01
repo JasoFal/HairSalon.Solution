@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using HairSalon.Models;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
+
 
 namespace HairSalon.Controllers
 {
@@ -17,8 +19,7 @@ namespace HairSalon.Controllers
 
     public ActionResult Index()
     {
-      List<Stylist> model = _db.Stylists.ToList();
-      return View(model);
+      return View(_db.Stylists.ToList());
     }
 
     public ActionResult Create()
@@ -37,7 +38,8 @@ namespace HairSalon.Controllers
     public ActionResult Details(int id)
     {
       Stylist thisStylist = _db.Stylists
-        .Include(s => s.Clients)
+        .Include(s => s.JoinEntities)
+        .ThenInclude(j => j.Client)
         .FirstOrDefault(s => s.StylistId == id);
       return View(thisStylist);
     }
@@ -69,6 +71,27 @@ namespace HairSalon.Controllers
       _db.Stylists.Remove(thisStylist);
       _db.SaveChanges();
       return RedirectToAction("Index");
+    }
+
+    public ActionResult AddClient(int id)
+    {
+      Stylist thisStylist = _db.Stylists.FirstOrDefault(s => s.StylistId == id);
+      ViewBag.ClientId = new SelectList(_db.Clients, "ClientId", "ClientLastName");
+      return View(thisClient);
+    }
+
+    [HttpPost]
+    public ActionResult AddClient(Stylist stylist, int clientId)
+    {
+      #nullable enable
+      ClientStylist? joinEntity = _db.ClientStylists.FirstOrDefault(j => (j.ClientId == clientId && j.StylistId == stylist.StylistId));
+      #nullable disable
+      if (joinEntity == null && clientId != 0)
+      {
+        _db.ClientStylist.Add(new ClientStylist() { ClientId = clientId, StylistId = stylist.StylistId });
+        _db.SaveChanges();
+      }
+      return RedirectToAction("Details", new { id = stylist.StylistId });
     }
   }
 }
