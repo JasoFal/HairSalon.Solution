@@ -4,5 +4,32 @@
 
 <h1>Hair Salon Database</h1>
 
-<p>@Html.ActionLink("See all stylists", "Index", "Stylists")</p>
+@using HairSalon.Models;
+
+<h4>Stylists</h4>
+@if (Model["stylists"].Length == 0)
+{
+  <p>No stylists have been added yet!</p>
+}
+<ul>
+  @foreach (Stylist sty in Model["stylists"])
+  {
+    <li>@Html.ActionLink(@sty.StylistLastName, "Details", "Stylists", new { id = sty.StylistId })</li>
+  }
+</ul>
+
+<h4>Clients</h4>
+@if (Model["clients"].Length == 0)
+{
+  <p>No clients have been added yet!</p>
+}
+<ul>
+  @foreach (Client cli in Model["clients"])
+  {
+    <li>@Html.ActionLink(@cli.ClientLastName, "Details", "Clients", new { id = cli.ClientId })</li>
+  }
+</ul>
+
+<p>@Html.ActionLink("Manage Stylists", "Index", "Stylists")</p>
+<p>@Html.ActionLink("Manage Clients", "Index", "Clients")</p>
 
